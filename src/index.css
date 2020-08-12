@@ -5,9 +5,21 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(to right, rgb(192, 53, 74), rgb(217, 13, 111));
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.desc {
+	box-shadow: 0px 3px 8px rgb(192, 53, 74);
+}
+
+.desc-c {
+	background: linear-gradient(to right, rgb(217, 13, 111), rgb(192, 53, 74));
+	  -webkit-background-clip: text;
+	  -webkit-text-fill-color: transparent;
+
 }
