@@ -21,7 +21,8 @@ const initialState = {
       name: '',
       fired: false,
       modal: false,
-      verdict: ''
+      verdict: '',
+      loading: false
     }
 
 class App extends Component { 
@@ -58,21 +59,23 @@ class App extends Component {
     } else {
 
       this.setState({
-        imageUrl: this.state.input
+        imageUrl: this.state.input,
+        loading: true
       })
 
       app.models.predict("d16f390eb32cad478c7ae150069bd2c6", this.state.input)
       .then(response => {
+        this.setState({ loading: true })
         const outputsValue = response.outputs[0].data.concepts;
 
           if(outputsValue[0].name === 'safe') {
-            this.setState({ verdict: 'This is allowed morally 👍👮', modal: true})
+            this.setState({ verdict: 'This is allowed morally 👍', modal: true, loading: false})
           }else {
-            this.setState({ verdict: 'This is not allowed morally 👮👎', modal: true})
+            this.setState({ verdict: 'This is not allowed morally 👎', modal: true, loading: false})
           }
       })
       .catch(err => {
-          this.setState({ verdict: 'Met with an error. Please try again with a valid link ✌👮' , modal: true})
+          this.setState({ verdict: 'Met with an error. Please try again with a valid link ✌' , modal: true})
       })
     }
   }
@@ -85,7 +88,7 @@ class App extends Component {
   }
 
   render() {
-    const {fired, modal, name, imageUrl, verdict} = this.state;
+    const {fired, modal, name, imageUrl, verdict, loading} = this.state;
     if (fired === false){ 
         return (
             <div className = "tc pa5">
@@ -100,8 +103,24 @@ class App extends Component {
               <Footer />
             </div>
         )
-    } else if(modal === true) {
+    } else if (loading) {
       return(
+        <div className = "tc pa5">  
+          <Logo />
+          <Form 
+            onInputChange = {this.onInputChange}
+            onPictureSubmit = {this.onPictureSubmit}
+            getName = {name}
+          />
+              <div className="f6 f5-ns center yellow">
+                <p className="">Loading...</p>
+              </div>
+          <Image imageUrl = {imageUrl}/>
+          <Footer />
+        </div> 
+      ) 
+    } else if(modal === true && !loading) {
+      return (
         <div className = "tc pa5">  
           <Logo />
           <Modal 
